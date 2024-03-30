@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBiginteger('userId');
             $table->unsignedBigInteger('categoryId');
+            $table->string('title');
+            $table->string('excerpt');
+            $table->string('slug');
             $table->string('thumbnail');
             $table->text('bodyImages');
             $table->text('body');

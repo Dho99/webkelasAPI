@@ -25,7 +25,7 @@ class AuthController extends Controller
     public function __construct(UserController $userController)
     {
         $this->userController = $userController;
-        // $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     public function login(Request $request)
@@ -41,7 +41,7 @@ class AuthController extends Controller
             return response()->json(
                 [
                     'status' => 'error',
-                    'message' => 'Unauthorized',
+                    'message' => 'Failed to find User',
                 ],
                 401,
             );
@@ -99,7 +99,10 @@ class AuthController extends Controller
 
     public function detail()
     {
-        return response()->json(['user' => auth()->user()], 200);
+        if(auth()->check()){
+            return response()->json(['user' => auth()->user()], 200);
+        }
+        return response()->json(['user' => 'Unauthorized'], 200);
     }
 
     private function createToken($token)

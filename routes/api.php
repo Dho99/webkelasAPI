@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +16,16 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('api')->group(function($route){
-    Route::controller(AuthController::class)->prefix('auth')->group(function () {
-        Route::post('login', 'login')->name('login');
-        Route::post('register', 'register')->name('register');
-        Route::post('logout', 'logout');
-        Route::post('refresh', 'refresh');
-        Route::get('show', 'detail');
-    });
+Route::controller(AuthController::class)->prefix('auth')->group(function () {
+    Route::post('login', 'login')->name('login');
+    Route::post('register', 'register')->name('register');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
+    Route::get('show', 'detail');
+});
+
+Route::middleware('auth:api')->group(function(){
+    Route::resource('post', PostController::class);
 
 });
 
