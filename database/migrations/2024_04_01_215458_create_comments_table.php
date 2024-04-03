@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('postId')->unsigned();
             $table->bigInteger('userId')->unsigned();
             $table->text('body');
+            $table->boolean('isEdited');
             $table->timestamps();
 
             $table->foreign('postId')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');

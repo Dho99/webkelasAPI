@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,10 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('show', 'detail');
 });
 
-Route::middleware('auth:api')->group(function(){
+// Route::middleware('auth:api')->group(function(){
     Route::resource('post', PostController::class);
+    Route::resource('comment', CommentsController::class);
 
-});
+// });
 
 

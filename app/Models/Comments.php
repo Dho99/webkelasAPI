@@ -10,4 +10,15 @@ class Comments extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    /**
+     * Get the user that owns the Comments
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function post()
+    {
+        return $this->belongsTo(\App\Models\Post::class, 'postId');
+    }
+
 }

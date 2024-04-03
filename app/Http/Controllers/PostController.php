@@ -13,15 +13,17 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api')->except;
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+    }
 
 
     public function index()
     {
-        return response()->json(['data' => Post::all()], 200);
+        $posts = Post::with('comments')->get();
+
+        return response()->json(['data' => $posts], 200);
     }
 
     /**
@@ -57,6 +59,7 @@ class PostController extends Controller
         $requestPayload['userId'] = auth()->user()->id;
         $requestPayload['slug'] = strtolower(Str::slug($requestPayload['title']));
         $requestPayload['excerpt'] = strip_tags($request->body, 200);
+        $requestPayload['bodyImages'] = json_encode($requestPayload['bodyImages']);
 
         $validate = Validator::make($requestPayload,[
             'title' => 'required|unique:posts,title',
