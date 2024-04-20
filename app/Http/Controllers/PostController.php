@@ -56,10 +56,16 @@ class PostController extends Controller
 
 
         $requestPayload = $request->all();
+
+        if(empty($requestPayload['title']) || empty($requestPayload['bodyImages'])){
+            return response()->json(['message' => 'Data yang diperlukan tidak boleh kosong !'], 500);
+        }
+
         $requestPayload['userId'] = auth()->user()->id;
         $requestPayload['slug'] = strtolower(Str::slug($requestPayload['title']));
         $requestPayload['excerpt'] = strip_tags($request->body, 200);
         $requestPayload['bodyImages'] = json_encode($requestPayload['bodyImages']);
+
 
         $validate = Validator::make($requestPayload,[
             'title' => 'required|unique:posts,title',
