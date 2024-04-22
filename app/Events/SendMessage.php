@@ -10,16 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class GotMessage
+class SendMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $roomId, $userId, $message;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($roomId, $userId, $message)
     {
-        //
+        $this->roomId = $roomId;
+        $this->userId = $userId;
+        $this->message = $message;
     }
 
     /**
@@ -30,7 +34,7 @@ class GotMessage
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel('chat'.$this->roomId)
         ];
     }
 }

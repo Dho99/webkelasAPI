@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Events\SendMessage;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -23,33 +24,27 @@ class MessageController extends Controller
         //
     }
 
-    public function messages()
+    public function loadMessage($roomId)
     {
-        $messages = Message::with('user')->get();
-        return response()->json(['messages' => $messages], 200);
+        $message = Message::where('chatId', $chatId)->orderBy('updated_at', 'asc')->get();
+        return response()->json(['data' => $message], 200);
     }
 
-    public function sendMessage(Request $request, $chatId)
+    public function sendMessage(Request $request)
     {
-        $message = $request->validate([
-            'messageBody' => 'required'
+        $chatId = $request->chatId;
+        $userId = auth()->user()->id;
+        $message = $request->message;
+
+        broadcast(new SendMessage($chatId, $userId, $message));
+
+        Message::create([
+            'chatId' => $chatId,
+            'userId' => $userId,
+            'message' => $message
         ]);
 
-        try{
-            $sendMessage = Message::create([
-                'senderId' => auth()->user()->id,
-                'messageBody' => $request->messageBody,
-                'receiverId' => $chatId
-            ]);
-
-            SendMessage::dispatch($sendMessage);
-
-            return response()->json(['message' => $sendMessage], 201);
-
-        }catch(\Exception $e){
-            return response()->json($e->getMessage());
-        }
-
+        return response()->json(['message' => 'Pesan berhasil dikirim', 'success' => true], 201);
     }
 
     /**

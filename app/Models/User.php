@@ -54,4 +54,18 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function canJoinRoom($chatId)
+    {
+        $granted = false;
+        $chat = Message::findOrFail($chatId);
+        $users = explode(":", $chat->users);
+        foreach($users as $id){
+            if($this->id == $id){
+                $granted = true;
+                //Mereturn nilai true pada pemanggilan fungsi canJoinRoom dengan parameter chatId
+            }
+        }
+        return $granted;
+    }
 }
