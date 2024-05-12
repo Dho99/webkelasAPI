@@ -18,6 +18,8 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+    protected $guarded = ['id'];
+
     protected $fillable = [
         'username',
         'firstName',
@@ -67,5 +69,6 @@ class User extends Authenticatable implements JWTSubject
             }
         }
         return $granted;
+//        return true;
     }
 }

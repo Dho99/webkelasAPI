@@ -19,6 +19,7 @@ use App\Http\Controllers\CommentsController;
 |
 */
 
+
 Route::controller(AuthController::class)
     ->prefix('auth')
     ->group(function () {
@@ -34,9 +35,10 @@ Route::resource('post', PostController::class);
 Route::resource('comment', CommentsController::class);
 
 
-Route::middleware(['auth:api'])->controller(MessageController::class)->prefix('chats')->group(function(){
-    Route::get('/','loadMessage')->name('loadMessage');
-    Route::post('/','sendMessage')->name('sendMessage');
+Route::middleware(['auth:api'])->controller(MessageController::class)->prefix('chats')->group(function () {
+    Route::get('/{chatId}', 'loadMessage')->name('loadMessage');
+    Route::post('/{chatId}', 'sendMessage')->name('sendMessage');
 });
 
-Route::post('/room',[RoomController::class, 'create'])->name('createRoom');
+Route::post('/room', [RoomController::class, 'create'])->name('createRoom');
+

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebAuthController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
+Route::prefix('web/auth')->controller(WebAuthController::class)->group(function () {
+    Route::get('/', 'index')->name('login');
+    Route::post('/', 'authenticate')->name('processLogin');
+    Route::get('/logout', 'logout')->middleware('auth')->name('processLogout');
+});
+
+
+// Route::middleware(['auth:web'])->group(function () {
+    Route::prefix('livechat')->controller(MessageController::class)->group(function () {
+        Route::get('/', 'index')->name('allChats');
+    });
+
+    Route::get('/checkSession', function () {
+        return response()->json([
+            'session' => auth()->check()
+        ]);
+    });
+
 // });

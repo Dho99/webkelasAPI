@@ -11,9 +11,17 @@ class MessageController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => 'index']);
+    }
+
+
     public function index()
     {
-
+        return view('Chat.Chat', [
+            'title' => 'Livechat'
+        ]);
     }
 
     /**
@@ -24,7 +32,7 @@ class MessageController extends Controller
         //
     }
 
-    public function loadMessage($roomId)
+    public function loadMessage($chatId)
     {
         $message = Message::where('chatId', $chatId)->orderBy('updated_at', 'asc')->get();
         return response()->json(['data' => $message], 200);
